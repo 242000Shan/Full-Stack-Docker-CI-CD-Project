@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Full Stack App</title>
+    <meta charset="UTF-8">
+</head>
+<body style="font-family: Arial; text-align:center; margin-top:50px;">
+
+<h1>Full Stack Docker CI/CD App 🚀</h1>
+
+<h3>Add User</h3>
+<input type="text" id="username" placeholder="Enter name">
+<button onclick="addUser()">Add</button>
+
+<h3>Users List</h3>
+<ul id="userList"></ul>
+
+<script>
+const API_URL = "http://localhost:5000";
+
+async function fetchUsers() {
+    const res = await fetch(`${API_URL}/users`);
+    const data = await res.json();
+
+    const list = document.getElementById("userList");
+    list.innerHTML = "";
+
+    data.forEach(user => {
+        const li = document.createElement("li");
+        li.textContent = user.name;
+        list.appendChild(li);
+    });
+}
+
+async function addUser() {
+    const name = document.getElementById("username").value;
+
+    if (!name) return;
+
+    await fetch(`${API_URL}/users`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name })
+    });
+
+    document.getElementById("username").value = "";
+    fetchUsers();
+}
+
+fetchUsers();
+</script>
+
+</body>
+</html>
